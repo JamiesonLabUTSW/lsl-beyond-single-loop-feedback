@@ -1,0 +1,14 @@
+Subjective:
+The history is sparse and lacks key temporal and descriptive details essential for an abdominal pain presentation. The student did not identify the onset, location, or migration of the pain, and failed to characterize its severity or progression. Associated symptoms were only partly addressed—nausea was noted, but vomiting, anorexia, and fever were omitted. Important negatives such as urinary and bowel symptoms were incompletely explored, and the past medical, surgical, and family history were neglected. The result is a vague and nonspecific history that does not meaningfully narrow the differential.
+
+Objective:
+The physical exam documentation is incomplete and inconsistent with the expected findings in suspected appendicitis. Vital signs were omitted entirely, which prevents assessment of systemic illness. The abdominal exam lacks localization or characterization of tenderness, and the statement that the abdomen was soft and non-tender directly contradicts the proposed diagnosis. No peritoneal signs, special maneuvers, or inspection findings were described, suggesting an inadequate exam. The overall impression is that the physical exam was too limited to support any diagnostic conclusions.
+
+Diagnosis:
+While the student correctly listed acute appendicitis as the primary diagnosis, the supporting evidence does not fit the condition’s typical presentation. The lack of localized RLQ tenderness, fever, or symptom progression makes appendicitis poorly justified. Gastroenteritis and GERD were reasonable to consider broadly but were not supported by history or exam findings—no diarrhea, vomiting, or reflux-type symptoms were present. The differentials reflect a generic rather than tailored diagnostic approach, suggesting weak discrimination among abdominal pain etiologies.
+
+Justification:
+The reasoning for appendicitis was largely unsupported, as the documented findings do not align with the classic migratory pain, anorexia, fever, or localized tenderness of this condition. The student appears to have selected the diagnosis based on the case context rather than on elicited evidence. Similarly, the justification for gastroenteritis and GERD was superficial, relying on vague “abdominal discomfort” rather than targeted clinical features. This indicates difficulty in linking data to hypotheses and distinguishing among gastrointestinal causes of pain.
+
+Plan:
+The proposed investigations and management were poorly aligned with the suspected condition. LFTs, amylase, and an abdominal X-ray add little diagnostic value for appendicitis, while essential tests like CBC, CRP, and urinalysis were omitted. The plan lacked mention of keeping the patient NPO, initiating IV fluids, or seeking a surgical consult. Overall, the plan was unfocused and failed to prioritize diagnostic efficiency or patient safety, suggesting the student needs clearer understanding of evidence-based workup and management for acute appendicitis.
