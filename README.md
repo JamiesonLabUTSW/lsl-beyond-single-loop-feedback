@@ -2,7 +2,20 @@
 
 Sample code for experiments on using LLM-as-a-judge techniques to monitor the quality of narrative feedback in medical education.
 
-Submitted to AAMC's Learn Serve Lead 2025 conference.
+## Citation
+
+**Holcomb MJ, Dalton TO, Jamieson AR.** Beyond Single-Loop Feedback: A Self-Validating LLM System for Medical Student Documentation Assessment. Presentation at: Learn Serve Lead 2025: The AAMC Annual Meeting; November 1-5, 2025; San Antonio, TX.
+
+### Authors
+
+- **Michael J. Holcomb, MS**¹ - Lyda Hill Department of Bioinformatics, University of Texas Southwestern Medical Center, Dallas, TX
+- **Thomas O. Dalton, MD**² - Department of Internal Medicine, University of Texas Southwestern Medical Center, Dallas, TX
+- **Andrew R. Jamieson, PhD**¹ - Lyda Hill Department of Bioinformatics, University of Texas Southwestern Medical Center, Dallas, TX
+
+¹Lyda Hill Department of Bioinformatics, University of Texas Southwestern Medical Center
+²Department of Internal Medicine, University of Texas Southwestern Medical Center
+
+---
 
 ![LLM-as-a-Judge Feedback Evaluation Screenshot](resources/screenshot.png)
 
@@ -239,4 +252,9 @@ See [LICENSE](LICENSE) file for full terms and conditions.
 
 ## Contact
 
-For issues or questions about this evaluation system, please refer to the AAMC Learn Serve Lead 2025 conference submission.
+For issues or questions about this evaluation system, you may e-mail the authors at firstname.lastname@utsouthwestern.edu.
+
+**Authors:**
+- Michael J. Holcomb, MS
+- Thomas O. Dalton, MD
+- Andrew R. Jamieson, PhD
