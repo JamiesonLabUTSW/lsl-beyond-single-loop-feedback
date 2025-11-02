@@ -1,0 +1,8 @@
+# LLM-as-a-Judge Feedback Evaluation
+# Python dependencies
+
+# Anthropic API client for Claude
+anthropic>=0.39.0
+
+# Rich library for beautiful terminal output
+rich>=13.7.0
