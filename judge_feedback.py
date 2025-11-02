@@ -55,7 +55,7 @@ class FeedbackJudge:
         "Developmental Alignment"
     ]
 
-    def __init__(self, api_key: Optional[str] = None, model: str = "claude-3-5-sonnet-20241022"):
+    def __init__(self, api_key: Optional[str] = None, model: str = "claude-sonnet-4-5-20250929"):
         """Initialize the judge with API credentials and model selection."""
         self.api_key = api_key or os.environ.get("ANTHROPIC_API_KEY")
         if not self.api_key:
@@ -272,8 +272,8 @@ Examples:
     )
     parser.add_argument(
         "-m", "--model",
-        default="claude-3-5-sonnet-20241022",
-        help="Claude model to use (default: claude-3-5-sonnet-20241022)"
+        default="claude-sonnet-4-5-20250929",
+        help="Claude model to use (default: claude-sonnet-4-5-20250929)"
     )
     parser.add_argument(
         "--judge-prompt",

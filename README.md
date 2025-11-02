@@ -4,6 +4,8 @@ Sample code for experiments on using LLM-as-a-judge techniques to monitor the qu
 
 Submitted to AAMC's Learn Serve Lead 2025 conference.
 
+![LLM-as-a-Judge Feedback Evaluation Screenshot](resources/screenshot.png)
+
 ## Overview
 
 This repository contains:
@@ -80,6 +82,8 @@ lsl-beyond-single-loop-feedback/
 ├── judge_feedback.py           # Main evaluation script
 ├── requirements.txt            # Python dependencies
 ├── README.md                   # This file
+├── LICENSE                     # Academic research license
+├── .gitignore                  # Git ignore patterns
 │
 ├── prompts/
 │   ├── feedback/
@@ -87,6 +91,9 @@ lsl-beyond-single-loop-feedback/
 │   │   └── mega_feedback.md    # Detailed feedback with reflection prompt
 │   └── judge/
 │       └── judge.md            # LLM-as-judge evaluation prompt
+│
+├── resources/
+│   └── screenshot.png          # Terminal output screenshot
 │
 └── examples/
     ├── case.md                 # OSCE case: Acute Appendicitis
@@ -108,7 +115,7 @@ The output JSON file contains:
 {
   "metadata": {
     "timestamp": "2025-11-02T10:30:00.123456",
-    "model": "claude-3-5-sonnet-20241022",
+    "model": "claude-sonnet-4-5-20250929",
     "inputs": {
       "checklist_path": "/path/to/checklist.md",
       "student_note_path": "/path/to/student_note.md",
