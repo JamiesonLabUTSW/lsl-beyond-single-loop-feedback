@@ -24,6 +24,7 @@ from typing import Dict, Optional
 
 try:
     from anthropic import Anthropic
+    from dotenv import load_dotenv
     from rich.console import Console
     from rich.panel import Panel
     from rich.progress import Progress, SpinnerColumn, TextColumn
@@ -31,8 +32,11 @@ try:
     from rich.text import Text
 except ImportError:
     print("Error: Required packages not installed.")
-    print("Please run: pip install anthropic rich")
+    print("Please run: pip install -r requirements.txt")
     sys.exit(1)
+
+# Load environment variables from .env file if it exists
+load_dotenv()
 
 
 # Initialize rich console for beautiful output
@@ -55,8 +59,10 @@ class FeedbackJudge:
         """Initialize the judge with API credentials and model selection."""
         self.api_key = api_key or os.environ.get("ANTHROPIC_API_KEY")
         if not self.api_key:
-            console.print("[bold red]Error:[/] ANTHROPIC_API_KEY not found in environment variables.")
-            console.print("Please set it with: export ANTHROPIC_API_KEY='your-key-here'")
+            console.print("[bold red]Error:[/] ANTHROPIC_API_KEY not found.")
+            console.print("Please set it using one of these methods:")
+            console.print("  1. Create a .env file: echo 'ANTHROPIC_API_KEY=your-key-here' > .env")
+            console.print("  2. Export as environment variable: export ANTHROPIC_API_KEY='your-key-here'")
             sys.exit(1)
 
         self.client = Anthropic(api_key=self.api_key)

@@ -16,11 +16,20 @@ This repository contains:
 ### 1. Installation
 
 ```bash
+# Create and activate virtual environment
+python -m venv .venv
+source .venv/bin/activate  # On Windows: .venv\Scripts\activate
+
 # Install Python dependencies
 pip install -r requirements.txt
 
-# Set your Anthropic API key
+# Set your Anthropic API key (choose one method)
+
+# Option A: Using environment variables (temporary, current session only)
 export ANTHROPIC_API_KEY='your-api-key-here'
+
+# Option B: Using .env file (recommended, persistent)
+echo "ANTHROPIC_API_KEY=your-api-key-here" > .env
 ```
 
 ### 2. Run the Judge
@@ -189,7 +198,7 @@ python judge_feedback.py \
 
 - Python 3.8+
 - Anthropic API key
-- Dependencies: `anthropic`, `rich`
+- Dependencies: `anthropic`, `rich`, `python-dotenv`
 
 ## License
 
