@@ -2,8 +2,12 @@
 """
 LLM-as-a-Judge Feedback Evaluation Script
 
-Evaluates narrative feedback quality using Claude as a judge across six dimensions:
-Polarity, Factuality, Evidence, Actionability, Connectivity, and Developmental Alignment.
+Evaluates narrative feedback using Claude as a judge across six dimensions:
+- Polarity (Sentiment): Tracks whether feedback tone matches student performance level
+- Five Quality Dimensions: Factuality, Evidence, Actionability, Connectivity, Developmental Alignment
+
+Polarity is tracked separately as a performance indicator, not a quality metric.
+The five quality dimensions are scored to produce a total quality score (out of 25 points).
 
 Copyright (c) 2025 The University of Texas Southwestern Medical Center.
 All rights reserved.
@@ -44,9 +48,17 @@ console = Console()
 
 
 class FeedbackJudge:
-    """Handles the evaluation of feedback using Claude as a judge."""
+    """Handles the evaluation of feedback using Claude as a judge.
 
-    DIMENSIONS = [
+    Polarity is tracked separately as a performance indicator (does feedback tone
+    match student performance level), not as a quality metric.
+
+    Five quality dimensions assess feedback quality and contribute to total score:
+    Factuality, Evidence, Actionability, Connectivity, and Developmental Alignment.
+    """
+
+    # All dimensions evaluated by the judge
+    ALL_DIMENSIONS = [
         "Polarity",
         "Factuality",
         "Evidence",
@@ -54,6 +66,18 @@ class FeedbackJudge:
         "Connectivity",
         "Developmental Alignment"
     ]
+
+    # Quality dimensions that contribute to total quality score
+    QUALITY_DIMENSIONS = [
+        "Factuality",
+        "Evidence",
+        "Actionability",
+        "Connectivity",
+        "Developmental Alignment"
+    ]
+
+    # Performance indicator (tracked separately, not part of quality score)
+    POLARITY_DIMENSION = "Polarity"
 
     def __init__(self, api_key: Optional[str] = None, model: str = "claude-sonnet-4-5-20250929"):
         """Initialize the judge with API credentials and model selection."""
@@ -103,8 +127,13 @@ class FeedbackJudge:
             sys.exit(1)
 
     def parse_evaluation(self, response: str) -> Dict:
-        """Parse the structured evaluation response into scores and analyses."""
-        results = {}
+        """Parse the structured evaluation response into scores and analyses.
+
+        Returns a dict with 'polarity' and 'quality_dimensions' keys.
+        Polarity is tracked separately as it indicates performance level, not quality.
+        Quality dimensions contribute to the total quality score.
+        """
+        all_results = {}
 
         # Extract content between <feedback> tags
         feedback_match = re.search(r'<feedback>(.*?)</feedback>', response, re.DOTALL)
@@ -113,7 +142,7 @@ class FeedbackJudge:
         else:
             feedback_content = response
 
-        for dimension in self.DIMENSIONS:
+        for dimension in self.ALL_DIMENSIONS:
             # Create pattern to match dimension section
             # Handle both "Analysis" and "Anaysis" (typo in prompt template)
             pattern = rf'{dimension}:\s*(?:Analysis|Anaysis):\s*(.*?)\s*{dimension} Score:\s*(\d+)/5'
@@ -123,7 +152,7 @@ class FeedbackJudge:
             if match:
                 analysis = match.group(1).strip()
                 score = int(match.group(2))
-                results[dimension] = {
+                all_results[dimension] = {
                     "score": score,
                     "analysis": analysis
                 }
@@ -132,21 +161,39 @@ class FeedbackJudge:
                 score_pattern = rf'{dimension} Score:\s*(\d+)/5'
                 score_match = re.search(score_pattern, feedback_content, re.IGNORECASE)
                 if score_match:
-                    results[dimension] = {
+                    all_results[dimension] = {
                         "score": int(score_match.group(1)),
                         "analysis": "[Unable to parse analysis]"
                     }
                 else:
-                    results[dimension] = {
+                    all_results[dimension] = {
                         "score": None,
                         "analysis": "[Unable to parse]"
                     }
 
-        return results
+        # Separate polarity from quality dimensions
+        polarity = all_results.get(self.POLARITY_DIMENSION, {
+            "score": None,
+            "analysis": "[Unable to parse]"
+        })
+
+        quality_dimensions = {
+            dim: all_results.get(dim, {"score": None, "analysis": "[Unable to parse]"})
+            for dim in self.QUALITY_DIMENSIONS
+        }
+
+        return {
+            "polarity": polarity,
+            "quality_dimensions": quality_dimensions
+        }
 
 
 def display_results(results: Dict, checklist_path: str, note_path: str, feedback_path: str, model: str):
-    """Display evaluation results in an attractive terminal format."""
+    """Display evaluation results in an attractive terminal format.
+
+    Shows Polarity separately (performance indicator), then the 5 quality dimensions
+    with a total quality score out of 25 points.
+    """
 
     # Header
     console.print()
@@ -169,11 +216,46 @@ def display_results(results: Dict, checklist_path: str, note_path: str, feedback
     table.add_column("Score", justify="center", style="bold")
     table.add_column("Analysis", style="white")
 
-    # Calculate average score
-    scores = [r["score"] for r in results.values() if r["score"] is not None]
-    avg_score = sum(scores) / len(scores) if scores else 0
+    # Extract polarity and quality dimensions from results
+    polarity = results["polarity"]
+    quality_dimensions = results["quality_dimensions"]
 
-    for dimension, data in results.items():
+    # Display Polarity first (performance indicator, not part of quality score)
+    score = polarity["score"]
+    analysis = polarity["analysis"]
+
+    if score is None:
+        score_text = "[red]N/A[/]"
+    elif score >= 4:
+        score_text = f"[green]{score}/5[/]"
+    elif score >= 3:
+        score_text = f"[yellow]{score}/5[/]"
+    else:
+        score_text = f"[red]{score}/5[/]"
+
+    display_analysis = analysis[:100] + "..." if len(analysis) > 100 else analysis
+    table.add_row("Polarity", score_text, display_analysis)
+
+    # Add horizontal rule separator
+    from rich.rule import Rule
+    table.add_row("", "", "")  # Empty row for spacing
+    console.print(table)
+    console.print(Rule(style="dim"))
+    console.print("[dim]Quality Dimensions (contribute to total score):[/]\n")
+
+    # Create new table for quality dimensions
+    quality_table = Table(show_header=True, header_style="bold magenta", box=None, padding=(0, 2))
+    quality_table.add_column("Dimension", style="cyan", width=22)
+    quality_table.add_column("Score", justify="center", style="bold")
+    quality_table.add_column("Analysis", style="white")
+
+    # Calculate total quality score
+    quality_scores = [data["score"] for data in quality_dimensions.values() if data["score"] is not None]
+    total_score = sum(quality_scores) if quality_scores else 0
+    max_score = len(quality_scores) * 5 if quality_scores else 25
+
+    # Display quality dimensions
+    for dimension, data in quality_dimensions.items():
         score = data["score"]
         analysis = data["analysis"]
 
@@ -190,29 +272,44 @@ def display_results(results: Dict, checklist_path: str, note_path: str, feedback
         # Truncate long analyses for table display
         display_analysis = analysis[:100] + "..." if len(analysis) > 100 else analysis
 
-        table.add_row(dimension, score_text, display_analysis)
+        quality_table.add_row(dimension, score_text, display_analysis)
 
-    console.print(table)
+    console.print(quality_table)
 
-    # Summary
+    # Summary - Total Quality Score
     console.print()
-    if avg_score >= 4:
-        avg_color = "green"
-    elif avg_score >= 3:
-        avg_color = "yellow"
+    percentage = (total_score / max_score * 100) if max_score > 0 else 0
+
+    if percentage >= 80:
+        score_color = "green"
+    elif percentage >= 60:
+        score_color = "yellow"
     else:
-        avg_color = "red"
+        score_color = "red"
 
     console.print(Panel(
-        f"[bold]Average Score:[/] [{avg_color}]{avg_score:.2f}/5.00[/]",
-        border_style=avg_color
+        f"[bold]Total Quality Score:[/] [{score_color}]{total_score}/{max_score}[/] [dim]({percentage:.1f}%)[/]",
+        border_style=score_color
     ))
     console.print()
 
 
 def save_results(results: Dict, checklist_path: str, note_path: str,
                 feedback_path: str, model: str, output_path: str, raw_response: str):
-    """Save evaluation results to JSON file."""
+    """Save evaluation results to JSON file.
+
+    Results are structured with polarity separate from quality dimensions.
+    Total quality score is calculated from the 5 quality dimensions only.
+    """
+    # Extract polarity and quality dimensions
+    polarity = results["polarity"]
+    quality_dimensions = results["quality_dimensions"]
+
+    # Calculate total quality score
+    quality_scores = [data["score"] for data in quality_dimensions.values() if data["score"] is not None]
+    total_quality_score = sum(quality_scores) if quality_scores else 0
+    max_quality_score = len(quality_scores) * 5 if quality_scores else 25
+
     output_data = {
         "metadata": {
             "timestamp": datetime.now().isoformat(),
@@ -224,9 +321,11 @@ def save_results(results: Dict, checklist_path: str, note_path: str,
             }
         },
         "evaluation": {
-            "dimensions": results,
-            "average_score": sum(r["score"] for r in results.values() if r["score"] is not None) /
-                           len([r for r in results.values() if r["score"] is not None])
+            "polarity": polarity,
+            "quality_dimensions": quality_dimensions,
+            "total_quality_score": total_quality_score,
+            "max_quality_score": max_quality_score,
+            "quality_percentage": round((total_quality_score / max_quality_score * 100) if max_quality_score > 0 else 0, 1)
         },
         "raw_response": raw_response
     }

@@ -66,14 +66,19 @@ The script provides:
 
 ## Evaluation Dimensions
 
-The judge evaluates feedback across six dimensions (1-5 scale):
+The judge evaluates feedback across six dimensions (1-5 scale each):
 
-1. **Polarity (Sentiment)**: Does the feedback appropriately convey the student's performance level?
-2. **Factuality (Clinical Accuracy)**: Is the feedback medically accurate?
-3. **Evidence (Groundedness)**: Does feedback align with actual note content?
-4. **Actionability (Guidance Quality)**: Can students understand what actions to take?
-5. **Connectivity (Linking to Performance)**: Are suggestions logically connected to observations?
-6. **Developmental Alignment**: Is feedback appropriate for MS2 students transitioning to clerkship?
+### Performance Indicator (tracked separately)
+- **Polarity (Sentiment)**: Does the feedback tone appropriately match the student's performance level? This dimension indicates whether feedback is positive/negative/mixed, reflecting the student's performance. It is NOT a quality metric—feedback should be negative if the student performed poorly.
+
+### Quality Dimensions (contribute to total score out of 25)
+1. **Factuality (Clinical Accuracy)**: Is the feedback medically accurate?
+2. **Evidence (Groundedness)**: Does feedback align with actual note content?
+3. **Actionability (Guidance Quality)**: Can students understand what actions to take?
+4. **Connectivity (Linking to Performance)**: Are suggestions logically connected to observations?
+5. **Developmental Alignment**: Is feedback appropriate for MS2 students transitioning to clerkship?
+
+The **Total Quality Score** is calculated by summing the five quality dimensions (maximum 25 points).
 
 ## Repository Structure
 
@@ -109,7 +114,7 @@ lsl-beyond-single-loop-feedback/
 
 ## JSON Output Format
 
-The output JSON file contains:
+The output JSON file contains structured results with polarity tracked separately from quality dimensions:
 
 ```json
 {
@@ -123,18 +128,35 @@ The output JSON file contains:
     }
   },
   "evaluation": {
-    "dimensions": {
-      "Polarity": {
-        "score": 4,
-        "analysis": "Feedback conveys strong performance..."
-      },
+    "polarity": {
+      "score": 4,
+      "analysis": "The feedback consistently emphasizes strengths..."
+    },
+    "quality_dimensions": {
       "Factuality": {
         "score": 5,
-        "analysis": "All clinical content is accurate..."
+        "analysis": "The feedback is clinically accurate throughout..."
       },
-      ...
+      "Evidence": {
+        "score": 4,
+        "analysis": "The feedback accurately references specific elements..."
+      },
+      "Actionability": {
+        "score": 4,
+        "analysis": "The feedback provides specific, implementable guidance..."
+      },
+      "Connectivity": {
+        "score": 4,
+        "analysis": "The feedback effectively connects observations..."
+      },
+      "Developmental Alignment": {
+        "score": 5,
+        "analysis": "The feedback appropriately targets MS2-to-clerkship..."
+      }
     },
-    "average_score": 4.33
+    "total_quality_score": 22,
+    "max_quality_score": 25,
+    "quality_percentage": 88.0
   },
   "raw_response": "Full text response from Claude..."
 }
