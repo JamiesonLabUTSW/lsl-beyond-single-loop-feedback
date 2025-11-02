@@ -193,7 +193,11 @@ python judge_feedback.py \
 
 ## License
 
-See repository for license information.
+Copyright (c) 2025 The University of Texas Southwestern Medical Center. All rights reserved.
+
+This software is licensed for academic research use only. Commercial use is expressly prohibited.
+
+See [LICENSE](LICENSE) file for full terms and conditions.
 
 ## Contact
 

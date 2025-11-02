@@ -4,6 +4,13 @@ LLM-as-a-Judge Feedback Evaluation Script
 
 Evaluates narrative feedback quality using Claude as a judge across six dimensions:
 Polarity, Factuality, Evidence, Actionability, Connectivity, and Developmental Alignment.
+
+Copyright (c) 2025 The University of Texas Southwestern Medical Center.
+All rights reserved.
+
+This software is licensed for academic research use only.
+Commercial use is expressly prohibited.
+See LICENSE file for full terms and conditions.
 """
 
 import argparse
